@@ -152,6 +152,85 @@
             margin: 0;
         }
 
+        /* 
+         * Botão e Modal de LGPD
+         * Estilização para o aviso de privacidade e proteção de dados.
+         */
+        .lgpd-btn {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-decoration: underline;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
+
+        .lgpd-btn:hover {
+            color: var(--secondary);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-title {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-body {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -843,6 +922,9 @@
             </div>
             <div class="header-right">
                 <p class="brand-subtitle">Criador de Currículos Simplificado</p>
+                <button class="lgpd-btn" onclick="openLGPD()">
+                    <i class="fas fa-shield-alt"></i> Proteção de Dados (LGPD)
+                </button>
                 <a href="#preview-section" class="mobile-preview-btn">
                     <i class="fas fa-eye"></i> Ver Prévia
                 </a>
@@ -1616,6 +1698,7 @@
 
         /* 
          * Geração e Exportação de PDF
+         * Converte o elemento de prévia em um canvas e gera um documento PDF A4.
          */
         async function generatePDF() {
             const btn = document.querySelector('button[onclick="generatePDF()"]');
@@ -1626,7 +1709,7 @@
             loading.style.display = 'inline-block';
 
             try {
-                // Temporarily adjust styles for PDF
+                // Ajuste temporário de estilo para garantir que o PDF saia no formato A4 correto
                 const originalPadding = element.style.padding;
                 const originalWidth = element.style.width;
                 element.style.padding = '20mm';
@@ -1635,10 +1718,10 @@
                 const canvas = await html2canvas(element, {
                     scale: 2,
                     useCORS: true,
-                    logging: false,
-                    backgroundColor: currentTemplate === 'template-criativo' ? '#f0f8ff' : '#ffffff'
+                    backgroundColor: '#ffffff'
                 });
 
+                // Restaura os estilos originais para a visualização na tela
                 element.style.padding = originalPadding;
                 element.style.width = originalWidth;
 
@@ -1663,10 +1746,57 @@
             }
         }
 
-        // Inicializa com um campo vazio para experiência e formação e atualiza a prévia
-        addEdu();
-        addExp();
+        /*
+         * Funções para o Modal de LGPD
+         * Gerencia a abertura e fechamento do aviso de proteção de dados.
+         */
+        function openLGPD() {
+            document.getElementById('lgpd-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Impede o scroll do body
+        }
+
+        function closeLGPD(event) {
+            document.getElementById('lgpd-modal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaura o scroll
+        }
+
+        /* 
+         * Inicialização do Currículo
+         * Garante que ao carregar a página, alguns blocos iniciais já estejam presentes e a prévia renderizada.
+         */
+        window.onload = () => {
+            addEdu();
+            addExp();
+            updateCV();
+        };
     </script>
+
+    <!-- 
+        Modal de LGPD
+        Informa ao usuário que os dados não são salvos no servidor, garantindo transparência.
+    -->
+    <div id="lgpd-modal" class="modal-overlay" onclick="closeLGPD(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeLGPD()">&times;</span>
+            <div class="modal-title">
+                <i class="fas fa-user-shield"></i> Proteção de Dados (LGPD)
+            </div>
+            <div class="modal-body">
+                <p>Esta ferramenta foi desenvolvida com foco total na sua <strong>privacidade e segurança</strong>.</p>
+                <br>
+                <p>Em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD)</strong>, informamos que:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Os dados informados são <strong>processados exclusivamente no seu navegador</strong> para a geração do currículo.</li>
+                    <li><strong>Não armazenamos</strong> e nem temos acesso às suas informações em servidores externos.</li>
+                    <li>Seus dados ficam salvos <strong>apenas na sessão atual</strong> da sua aba.</li>
+                    <li>Assim que você fecha a aba ou atualiza a página, todas as informações são <strong>automaticamente descartadas</strong>.</li>
+                </ul>
+                <br>
+                <p>Sua segurança é nossa prioridade. Sinta-se à vontade para criar seu currículo com tranquilidade!</p>
+            </div>
+            <button class="btn btn-primary" onclick="closeLGPD()" style="margin-top: 25px;">Entendido</button>
+        </div>
+    </div>
 </body>
 
 </html>
