@@ -40,6 +40,45 @@
             padding-bottom: 40px;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        /* 
+         * Botão de Prévia para Mobile
+         * Exibido apenas em telas menores para facilitar a navegação até o currículo.
+         */
+        .mobile-preview-btn {
+            display: none;
+        }
+
+        @media (max-width: 859px) {
+            .mobile-preview-btn {
+                display: inline-flex;
+                background: var(--secondary);
+                color: #fff;
+                padding: 6px 12px;
+                border-radius: 20px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-decoration: none;
+                align-items: center;
+                gap: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                transition: 0.3s;
+            }
+
+            .mobile-preview-btn:active {
+                transform: scale(0.95);
+                background: #2980B9;
+            }
+
+            .brand-subtitle {
+                display: none;
+            }
+        }
+
 
         /* 
          * Estilização do Cabeçalho (Header)
@@ -788,6 +827,9 @@
             </div>
             <div class="header-right">
                 <p class="brand-subtitle">Criador de Currículos Simplificado</p>
+                <a href="#preview-section" class="mobile-preview-btn">
+                    <i class="fas fa-eye"></i> Ver Prévia
+                </a>
             </div>
         </div>
     </header>
@@ -1004,7 +1046,7 @@
         </div>
 
         <!-- Lado Direito: Painel de Prévia e Download -->
-        <div class="preview-panel">
+        <div class="preview-panel" id="preview-section">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; border-bottom: 2px solid var(--light); padding-bottom: 10px; gap: 10px;">
                 <h2 style="margin:0; border:none; padding:0; flex: 1;">Prévia</h2>
                 <div style="display:flex; gap: 8px;">
